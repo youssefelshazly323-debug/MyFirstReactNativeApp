@@ -1,34 +1,19 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState } from 'react';
 
 import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { WebBadge } from '@/components/web-badge';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
-
 export default function HomeScreen() {
+  const [textCharacters, setTextCharacters] = useState('');
+  const [textWords, setTextWords] = useState('');
+  const [textSentences, setTextSentences] = useState('');
+  const [textNone, setTextNone] = useState('');
+
   return (
     <ThemedView style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
@@ -40,18 +25,48 @@ export default function HomeScreen() {
         </ThemedView>
 
         <ThemedText type="code" style={styles.code}>
-          get started
+          auto capitalization examples
         </ThemedText>
 
         <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+          <ThemedText type="subtitle">Auto Capitalize Characters</ThemedText>
+          <TextInput
+            style={styles.input}
+            placeholder="Every letter is capitalized"
+            value={textCharacters}
+            onChangeText={setTextCharacters}
+            autoCapitalize="characters"
+            placeholderTextColor="#999"
           />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
+
+          <ThemedText type="subtitle">Auto Capitalize Words</ThemedText>
+          <TextInput
+            style={styles.input}
+            placeholder="First letter of each word"
+            value={textWords}
+            onChangeText={setTextWords}
+            autoCapitalize="words"
+            placeholderTextColor="#999"
+          />
+
+          <ThemedText type="subtitle">Auto Capitalize Sentences</ThemedText>
+          <TextInput
+            style={styles.input}
+            placeholder="Start of sentences capitalized"
+            value={textSentences}
+            onChangeText={setTextSentences}
+            autoCapitalize="sentences"
+            placeholderTextColor="#999"
+          />
+
+          <ThemedText type="subtitle">No Auto Capitalization</ThemedText>
+          <TextInput
+            style={styles.input}
+            placeholder="No auto capitalization"
+            value={textNone}
+            onChangeText={setTextNone}
+            autoCapitalize="none"
+            placeholderTextColor="#999"
           />
         </ThemedView>
 
@@ -94,5 +109,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.three,
     paddingVertical: Spacing.four,
     borderRadius: Spacing.four,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    backgroundColor: '#fff',
+    color: '#000',
   },
 });
